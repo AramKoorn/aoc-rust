@@ -82,5 +82,4 @@ fn main() {
     for key in keys.clone() {
         print!("{}", map2[&key].last().unwrap());
     }
-
 }

@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 mod part1;
 mod part2;
 use part1::part1;
