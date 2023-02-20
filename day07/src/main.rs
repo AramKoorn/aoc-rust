@@ -7,7 +7,7 @@ fn main() {
     let mut fs: HashMap<String, u32> = HashMap::new();
     let mut path: String = "/".to_string();
 
-    for cmd in commands[1..commands.len() - 1].into_iter() {
+    for cmd in commands[1..commands.len()].into_iter() {
         let mut s: Vec<&str> = cmd.split(" ").collect();
         // println!{"{}", s[0]};
 
@@ -15,16 +15,16 @@ fn main() {
             if s[1] == "cd" {
                 // set current path 1 directory back
                 if s[2] == ".." {
-                    println!("current {}", path);
+                    // println!("current {}", path);
                     let mut paths: Vec<&str> = path.split("/").collect();
                     let mut slices = &paths[1..paths.len() - 2];
-                    let mut path: String = "/".to_string();
+                    let mut new_path: String = "/".to_string();
                     for sl in slices {
-                        path += sl;
-                        path += "/";
+                        new_path += sl;
+                        new_path += "/";
                     }
-
-                    println!("one back{}", path);
+                    path = new_path;
+                    // println!("one back{}", path);
                 } else {
                     path += s[2];
                     path += "/";
@@ -33,32 +33,43 @@ fn main() {
             }
         } else if s[0] != "dir" {
             let key = path.clone();
-            println!("{:?}", s[0]);
+            // println!("{:?}", s[0]);
             let value = s[0].parse::<u32>().unwrap();
             let val = fs.entry(key).or_insert(0);
             *val += value;
                     
-            for sli in path.clone()[0..path.len() - 1].split("/") {
-                // println!("{}", path);
-                // println!("{}", sli);
+            let mut tmp: String = "/".to_string();
+            for sep in path.clone().split("/") {
+                tmp += sep;
+                if tmp != "/" {
+                    tmp += "/";
+                }
+                if tmp != path && fs.contains_key(&tmp) {
+
+                    let key = tmp.clone();
+                    // println!("{:?}", fs);
+                    let val = fs.entry(key).or_insert(0);
+                    *val += value;
+
+                }
+                println!("{}", path);
+                
             }
-            
-            // Update nested directories
         }
     }
 
     let mut t = 0;
     let limit: u32 = 100000;
-    for filesize in fs.values() {
+    for (p, filesize) in fs.iter() {
         
-        if filesize < &limit{
+        if filesize <= &limit{
             println!("{}", filesize);
             t += filesize;
         }
     }
 
     println!("{:?}", fs);
-    // println!("Answer1: {}", t);
+    println!("Answer1: {}", t);
 
 
 
