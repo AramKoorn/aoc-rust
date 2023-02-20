@@ -53,6 +53,9 @@ fn main() {
 
             println!("{}", path);
         }
+        let val = system.entry("/".to_string()).or_insert(0);
+        *val += size;
+
     }
     println! {"System: {:?}", system};
 
@@ -67,4 +70,28 @@ fn main() {
 
     println!("{:?}", fs);
     println!("Answer1: {}", t);
+    let used_space = system.get(&"/".to_string()).unwrap();
+    let used_space = *used_space as i32;
+
+    println!("Total used space: {}", used_space);
+
+    // Part 2
+    let total_size: i32 = 70_000_000;
+    let required: i32 = 30_000_000;
+    // let used_space = used_space as i32;
+    let mut v: Vec<i32> = Vec::new();
+
+    for val in system.values() {
+
+        let new_val = *val as i32;
+
+        let tmp: i32 = (total_size - used_space) + new_val;
+        if tmp >= required {
+            v.push(new_val);
+        }
+    }
+    v.sort();
+    println!("Answer part2: {:?}", v[0]);
+
+
 }
